@@ -1,6 +1,5 @@
-# c2_interaction.py
+# c2_command_sender.py
 import requests
-import time
 
 SERVER_URL = "http://100.64.4.223:5000"
 
@@ -14,31 +13,16 @@ def set_command(command):
     except Exception as e:
         print(f"Error sending command: {e}")
 
-def get_result():
-    while True:
-        try:
-            # Poll for result (as result is asynchronous)
-            response = requests.get(f"{SERVER_URL}/result")
-            if response.status_code == 200:
-                result = response.json().get('result', None)
-                if result:
-                    print(f"Result from client: {result}")
-                    break
-            else:
-                print(f"Error getting result. Status Code: {response.status_code}")
-        except Exception as e:
-            print(f"Error getting result: {e}")
-
-        # Wait before polling again to avoid excessive requests
-        time.sleep(5)
-
 if __name__ == "__main__":
-    # Get the user input
-    command = input("Enter the command to send to the client: ")
+    # Loop to continuously send commands
+    while True:
+        # Get the user input
+        command = input("Enter the command to send to the client (or type 'exit' to quit): ")
+        
+        # Exit the loop if the user types 'exit'
+        if command.lower() == 'exit':
+            print("Exiting command sender...")
+            break
 
-    # Send the command to the C2 server
-    set_command(command)
-
-    # Fetch the result from the C2 server
-    print("Waiting for the client to execute the command and return the result...")
-    get_result()
+        # Send the command to the C2 server
+        set_command(command)
