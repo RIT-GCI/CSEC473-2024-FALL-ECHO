@@ -1,0 +1,28 @@
+# Noah Barnes
+# Daryl Johnson
+# Cyber Defense and Techniques
+# 24 September 2024
+# CDT ECHO
+
+---
+- name: Extracts fun times for everyone! 
+  hosts: 10.65.0.0 #will be altered
+  vars:
+    github_repository: "https://github.com/RIT-GCI/CSEC473-2024-FALL-ECHO/tree/main" #needs to be changed once uploaded for final changes
+    extract_path: "C:\\..." #path will be changed
+
+  tasks:
+    - name: Download GitHub repository using var
+      win_get_url:
+        url: "{{ github_repository }}"
+        dest: "C:\\funnylilzip.zip"
+
+    - name: Create extract folder
+      win_file:
+        path: "{{ extract_path }}"
+        state: directory
+
+    - name: Extract files from GitHub repository
+      win_unzip:
+        src: "C:\\funnylilzip.zip"
+        dest: "{{ extract_path }}"

