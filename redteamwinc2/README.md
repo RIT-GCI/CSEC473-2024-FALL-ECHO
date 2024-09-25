@@ -18,3 +18,4 @@ To use this tool, a user must gain access to the target box and extract the file
 Start both py files through python3
 Have the Kalibox listen for connections on port
 be able to run commands on boxes by sending commands through server.
+make sure both port numbers match and the kali box IP is placed within __py__abc
