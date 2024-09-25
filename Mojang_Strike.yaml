@@ -1,0 +1,21 @@
+---
+#Aiden Grassmuck
+- name: Alter Windows Language To Swedish 
+  hosts: 100.64.4.37
+  tasks:
+    - name: WinRM Enable
+      ansible.windows.win_shell: |
+        Enable-PSRemoting -Force
+ 
+    - name: Change Language
+      ansible.windows.win_shell: |
+        Set-WinSystemLocale sv-SE
+        Set-WinUIlanguageOverride sv-SE
+        Set-WinUserLanguageList sv-SE
+      become: yes
+
+
+    - name: Reboot
+      ansible.windows.win_reboot:
+        reboot_timeout: 600 
+ 
