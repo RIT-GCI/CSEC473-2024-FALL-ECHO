@@ -56,7 +56,8 @@ class C2Server:
     def run(self):
         try:
             while True:
-                client_socket, client_address = self.server_socket.accept() #creates client socket and waits for incomming connections
+                client_socket  = self.server_socket.accept()
+                client_address = self.server_socket.accept() #creates client socket and waits for incomming connections
                 client_handler = threading.Thread(target=self.handle_client, args=(client_socket, client_address)) 
                 client_handler.start() #listens and accepts connections from server socket
 
