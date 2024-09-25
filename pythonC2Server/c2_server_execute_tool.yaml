@@ -1,0 +1,12 @@
+#Name: Nicholas Milonni
+#Email: nrm3665@g.rit.edu
+#Date: 9/24/2024
+
+- name: c2 Red Team server Playbook #2(execute python server file, c2_server.py)
+  hosts: 100.65.3.0 #change to whatever target you want.
+  tasks:
+
+  #Starting python c2 server script:
+  - name: c2secondTool
+    command: python3 /home/debian/c2_server.py
+  become: true
