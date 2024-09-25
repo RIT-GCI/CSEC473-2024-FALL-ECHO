@@ -2,6 +2,7 @@ Noah Barnes
 ndb1419@g.rit.edu
 Daryl Johnson 
 25 September 2024
+CDT ECHO
 
 This is a simple C2 server for a Windows machine that creates a socket on the client machine to connect back to the server on the Kali Box. 
 
