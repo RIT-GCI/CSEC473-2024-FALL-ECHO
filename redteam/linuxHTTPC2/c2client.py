@@ -1,4 +1,4 @@
-# c2_client.py
+# c2_client.py - Ethan Zeevi
 import requests
 import time
 import os
