@@ -1,8 +1,10 @@
-# c2_command_sender.py
+# c2_user.py - Ethan Zeevi
 import requests
 
+# Change to point at server
 SERVER_URL = "http://100.64.4.223:5000"
 
+# Sends command to http endpoint
 def set_command(command):
     try:
         response = requests.post(f"{SERVER_URL}/set_command", json={'command': command})
