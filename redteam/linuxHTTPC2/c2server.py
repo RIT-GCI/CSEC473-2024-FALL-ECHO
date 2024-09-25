@@ -1,4 +1,4 @@
-# c2_server.py
+# c2_server.py - Ethan Zeevi
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
