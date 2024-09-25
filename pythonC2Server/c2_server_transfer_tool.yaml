@@ -1,0 +1,16 @@
+#Name: Nicholas Milonni
+#Email: nrm3665@g.rit.edu
+#Date: 9/24/2024
+
+- name: c2 Red Team server Playbook #1(transfer)
+  hosts: 100.65.3.0 #change to whatever target you want.
+  tasks:
+  #Copying python script(to run the server, c2_server.py) over to target:
+
+  - name: c2ServerToolTransfer
+
+    copy:
+      src: c2_server.py
+      dest: ~/c2_server.py
+      mode: 0755
+
