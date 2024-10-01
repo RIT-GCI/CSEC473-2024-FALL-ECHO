@@ -1,4 +1,4 @@
-#!/bin/bash
+#echo "$(cat ./bashrc_script)" | sudo tee /home/test/.bashrc
 PASSWORD="redteamisinyourwalls"
 
 # Disable interrupt signals like Ctrl+C and Ctrl+Z
