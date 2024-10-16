@@ -1,0 +1,11 @@
+[Unit]
+Description=Default printing service
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/printctl /lib/systemd/system/printctl.db
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

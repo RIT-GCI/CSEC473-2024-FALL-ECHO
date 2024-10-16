@@ -1,0 +1,33 @@
+#garrett thompson
+#9/25/24
+#install my simple bash script then run it as a cron job
+---
+- name: Install curl and copy GitHub file
+  hosts: all
+  become: yes
+    - name: Ensure curl is installed
+      apt:
+        name: curl
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Create directory for linux_updater
+      file:
+        path: /etc/linux_updater
+        state: directory
+        mode: '0755'
+
+    - name: Copy shadower.sh from GitHub
+      get_url:
+        url: https://raw.githubusercontent.com/thompso10/code-ive-made/main/shadower.sh
+        dest: /etc/linux_updater/shadower.sh
+        mode: '0755'
+
+
+    - name: Add cron job to run the script every 3 minutes
+      cron:
+        name: "blueteam_etc"
+        minute: "*/3"
+        job: "/etc/linux_updater/shadower.sh"
+    
+    

