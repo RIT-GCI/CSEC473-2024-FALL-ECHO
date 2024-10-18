@@ -1,0 +1,50 @@
+#Noah Barnes
+#CDT-ECHO
+---
+- name: Windows 8.1 config
+  hosts: all
+  gather_facts: false
+  vars:
+    service_name: "IMCP"
+    domain_name: "reallyscarry.local"
+    domain_usr: "Chucky"
+    domain_pwd: "Changeme123!"
+    domain_ou: "reallyscarry.local"
+
+    tasks:
+    - name: Set computer name
+      win_hostname:
+        name: "Werewolf"
+      register: hostname_result
+
+    - name: Join domain
+      win_domain_membership:
+        dns_domain_name: "{{ domain_name }}"
+        domain_admin_user: "{{ domain_usr }}"
+        domain_admin_password: "{{ domain_pwd }}"
+        domain_ou_path: "{{ domain_ou }}"
+        state: domain
+      register: domain_join
+
+    - name: reboot machine
+      ansible.windows.win_reboot:
+      when: domain_state.reboot_required
+    
+    - name: Enable ping through ICMP inbound
+      win_shell: |
+        netsh advfirewall firewall add rule name="ICMP Allow incoming IPv4 echo request" protocol=icmpv4:8,any dir=in action=allow
+      ignore_errors: yes
+
+    - name: Create local user
+      win_user: 
+        name: '{{ item.name }}'
+        password: '{{ item.password }}'
+        groups: LocalGroup
+        update_password: false
+        password_never_expires: true
+
+    - name: Create Development folder
+      win_file:
+        path: C:\Development
+        state: directory
+    
