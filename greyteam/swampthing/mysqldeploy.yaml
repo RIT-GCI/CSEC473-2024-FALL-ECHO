@@ -1,0 +1,102 @@
+---
+- name: Deploy MySQL Server on Debian and Join AD Domain
+  hosts: all
+  become: yes
+  vars:
+    domain_name: "reallyscary.local"
+    domain_user: "chucky@reallyscary.local"
+    domain_password: "Changeme123!"
+    mysql_greyteam_password: "greyteam"
+    realm_packages:
+      - realmd
+      - sssd
+      - sssd-tools
+      - adcli
+      - krb5-user
+      - packagekit
+      - libnss-sss
+      - libpam-sss
+  tasks:
+    - name: Update apt cache and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install MySQL Server
+      apt:
+        name: default-mysql-server
+        state: present
+
+    - name: Install python3-pymysql
+      apt:
+        name: python3-pymysql
+        state: present
+
+    - name: Start and Enable MySQL Service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+#    - name: Set MySQL root password
+#      mysql_user:
+#        name: root
+#        host: localhost
+#        password: "{{ mysql_root_password }}"
+#        check_implicit_admin: yes
+
+    - name: Create greyteam mysql user
+      ansible.builtin.command: sudo mysql -e "CREATE USER 'greyteam'@'localhost' IDENTIFIED BY 'officalgreyteampassword';"
+      ignore_errors: true
+
+    - name: Grant permission to greyteam user
+      ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'greyteam'@'localhost' WITH GRANT OPTION;"
+      ignore_errors: false
+
+    - name: Install required packages for AD integration
+      apt:
+        name: "{{ realm_packages }}"
+        state: present
+
+    - name: Join the server to the AD domain
+      command: >
+        echo "{{ domain_password }}" | realm join --user="{{ domain_user }}" "{{ domain_name }}"
+      register: join_result
+      ignore_errors: yes
+
+    - name: Verify AD domain join status
+      debug:
+        msg: "AD domain join result: {{ join_result.stdout }}"
+
+    - name: Enable and start SSSD service
+      service:
+        name: sssd
+        state: started
+        enabled: yes
+
+    - name: Configure PAM to create home directories on login
+      lineinfile:
+        path: /etc/pam.d/common-session
+        line: "session required pam_mkhomedir.so skel=/etc/skel/ umask=0022"
+        state: present
+
+    - name: Restart MySQL service to apply changes
+      service:
+        name: mysql
+        state: restarted
+
+#    - name: Create MySQL database
+#      mysql_db:
+#        name: "test"
+#        state: present
+#        login_user: greyteam
+#        login_password: "{{ mysql_greyteam_password  }}"
+
+    - name: Create database
+      community.mysql.mysql_db:
+        name: hauntedhouse
+        state: present
+        login_unix_socket: /run/mysqld/mysqld.sock
+
+    - name: Run SQL script to populate database
+      ansible.builtin.command: mysql --user="greyteam" --password="greyteam" --database="hauntedhouse" -e "source /home/debian/populatedb.sql"
