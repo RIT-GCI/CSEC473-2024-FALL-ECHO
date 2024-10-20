@@ -2,22 +2,21 @@
 -- USE hauntedhouse;
 
 CREATE TABLE IF NOT EXISTS visitors (
-    visitor_id INT PRIMARY KEY AUTO_INCREMENT,
+    visitor_id INT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    reason_for_visit VARCHAR(100)
 );
 
-INSERT IGNORE INTO visitors (name) VALUES
-('Arianna S.'),
-('Gavin F.'),
-('Gavin H.'),
-('Jacob S.'),
-('Joseph C.'),
-('Justin H.'),
-('Luke M.'),
-('Max F.'),
-('Rachel L.'),
-('Harrison T.');
+INSERT IGNORE INTO visitors (visitor_id, name) VALUES
+(1, 'Arianna S.'),
+(2, 'Gavin F.'),
+(3, 'Gavin H.'),
+(4, 'Jacob S.'),
+(5, 'Joseph C.'),
+(6, 'Justin H.'),
+(7, 'Luke M.'),
+(8, 'Max F.'),
+(9, 'Rachel L.'),
+(10, 'Harrison T.');
 
 CREATE TABLE IF NOT EXISTS room_logs (
     log_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -52,8 +51,6 @@ CREATE TABLE IF NOT EXISTS found_items (
     item_id INT PRIMARY KEY AUTO_INCREMENT,
     description VARCHAR(200),
     room_name VARCHAR(50),
-    visitor_id INT,
-    FOREIGN KEY (visitor_id) REFERENCES visitors(visitor_id)
 );
 
 INSERT IGNORE INTO found_items (description, room_name) VALUES
