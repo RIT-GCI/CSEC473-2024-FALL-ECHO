@@ -13,31 +13,11 @@
         state: present
         update_cache: yes
 
-    - name: Copy over the index file (home page) 
+    - name: Copy over the directory with the web page contents 
       copy:
-        src: /var/www/html/index.html
-        dest: /var/www/html/index.html
+        src: /var/www/html
+        dest: /var/www/html
     
-    - name: Copy over the living room file
-      copy:
-        src: /var/www/html/living-room.html
-        dest: /var/www/html/living-room.html
-
-    - name: Copy over the dining room file
-      copy:
-        src: /var/www/html/dining-room.html
-        dest: /var/www/html/dining-room.html
-
-    - name: Copy over the basement file
-      copy:
-        src: /var/www/html/basement.html
-        dest: /var/www/html/basement.html
-
-    - name: Copy over the font type file 
-      copy: 
-        src: /var/www/html/Creepster-Regular.ttf
-        dest: /var/www/html/Creepster-Regular.ttf
-
     - name: Start and Enable Apache
       systemd:
         name: apache2
