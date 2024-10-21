@@ -3,15 +3,35 @@
   hosts: all
   become: true
   tasks:
+
+    -name: Install packages 
+     apt:
+       name: 
+        - apache2
+        - sssd
+        - realmd
+        - oddjob
+        - oddjob-mkhomedir
+        - adcli
+        - samba-common
+        - samba-common-tools 
+        - krb5-workstation 
+        - openldap-clients
+        - policycoreutils-python
+      state: present
+      update_cache: yes
   
     - name: Domain Join 
-      apt
+      expect:
+        command: realm join --user=Chucky spooky.domain
+        responses: 
+          Password: ChangeMe123
 
-    - name: Install Apache
-      apt: 
-        name: apache2
-        state: present
-        update_cache: yes
+    - name: Add AD Group to the sudoers file
+      lineinfile: 
+        path: /etc/sudoers
+        line: "%Group ALL=(ALL) ALL"
+        validate: "visudo -cf %s"
 
     - name: Copy over the directory with the web page contents 
       copy:
