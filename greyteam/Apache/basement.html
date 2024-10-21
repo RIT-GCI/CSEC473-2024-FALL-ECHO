@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haunted Mansion - Basement</title>
+    <style>
+
+        @font-face {
+            font-family: 'Creepster';
+            src: url('Creepster-Regular.ttf');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Creepster', cursive;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-shadow: 0 0 10px #888, 0 0 20px #888, 0 0 30px #888;
+            margin-top: 50px;
+        }
+
+        .door {
+            display: inline-block;
+            margin-top: 100px;
+            padding: 20px;
+            background-color: #444;
+            border: 2px solid #888;
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 0 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .door:hover {
+            background-color: #666;
+            transform: scale(1.1);
+        }
+
+        .footer {
+            font-size: 1rem;
+            color: grey;
+            text-shadow: 0 0 10px black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Basement</h1>
+    <p>It's dark and damp. You feel something move past your legs...</p>
+
+    <a href="dining-room.html" class="door">Return to the Dining Room</a>
+    <a href="index.html" class="door">Run to the Entrance</a>
+
+    <div class="footer">
+        <p>&copy; 2024 Haunted Mansion. Will you survive the night?</p>
+    </div>
+
+</body>
+</html>

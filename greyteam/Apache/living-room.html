@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haunted Mansion - Living Room</title>
+    <style>
+
+        @font-face {
+            font-family: 'Creepster';
+            src: url('Creepster-Regular.ttf');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Creepster', cursive;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+            margin-top: 50px;
+        }
+
+        .door {
+            display: inline-block;
+            margin-top: 100px;
+            padding: 20px;
+            background-color: darkgreen;
+            border: 2px solid #00ff00;
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 0 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .door:hover {
+            background-color: limegreen;
+            transform: scale(1.1);
+        }
+
+        .footer {
+            font-size: 1rem;
+            color: grey;
+            text-shadow: 0 0 10px black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>The Living Room</h1>
+    <p>It feels... cold. The air is heavy. What will you do?</p>
+
+    <a href="dining-room.html" class="door">Go to the Dining Room</a>
+    <a href="index.html" class="door">Return to Entrance</a>
+
+    <div class="footer">
+        <p>&copy; 2024 Haunted Mansion. Proceed carefully...</p>
+    </div>
+
+</body>
+</html>

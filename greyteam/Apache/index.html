@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haunted Mansion - Entrance</title>
+    <style>
+        
+        @font-face {
+            font-family: 'Creepster';
+            src: url('Creepster-Regular.ttf');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Creepster', cursive;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+            margin-top: 50px;
+        }
+
+        .door {
+            display: inline-block;
+            margin-top: 100px;
+            padding: 20px;
+            background-color: darkred;
+            border: 2px solid #ff0000;
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 0 10px #000;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .door:hover {
+            background-color: crimson;
+            transform: scale(1.1);
+        }
+
+        .footer {
+            font-size: 1rem;
+            color: grey;
+            text-shadow: 0 0 10px black;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to the Haunted Mansion</h1>
+    <p>Do you dare enter?</p>
+
+    <a href="living-room.html" class="door">Enter the Living Room</a>
+
+    <div class="footer">
+        <p>&copy; 2024 Haunted Mansion. Enter if you dare...</p>
+    </div>
+
+</body>
+</html>
