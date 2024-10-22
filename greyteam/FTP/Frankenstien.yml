@@ -1,0 +1,19 @@
+--- 
+
+- name: Configure FTP 
+  hosts: all
+  become: true
+  tasks:
+  
+	- name: Insall FTP
+	  apt: 
+		name: vsftpd
+		state: present
+		update_cache: yes
+		
+	- name: Start and Enable FTP 
+	  systemd: 
+		name: vsftpd
+		state: started
+		enabled: true
+	
