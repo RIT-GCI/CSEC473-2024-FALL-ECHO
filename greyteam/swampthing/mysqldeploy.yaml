@@ -39,11 +39,11 @@
         enabled: yes
 
     - name: Create blackteam mysql user
-      ansible.builtin.command: sudo mysql -e "CREATE USER 'blackteam'@'localhost' IDENTIFIED BY 'officalblackteampassword';"
+      ansible.builtin.command: sudo mysql -e "CREATE USER 'blackteam'@'%' IDENTIFIED BY 'blackteam';"
       ignore_errors: true
 
     - name: Grant permission to blackteam user
-      ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'blackteam'@'localhost' WITH GRANT OPTION;"
+      ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'blackteam'@'%' WITH GRANT OPTION;"
       ignore_errors: false
 
     - name: Install required packages for AD integration
@@ -67,11 +67,14 @@
         state: started
         enabled: yes
 
- #   - name: Configure PAM to create home directories on login
- #    lineinfile:
- #       path: /etc/pam.d/common-session
- #       line: "session required pam_mkhomedir.so skel=/etc/skel/ umask=0022"
- #       state: present
+    - name: Edit MySQL config file to allow remote connections
+      blockinfile:
+        path: /etc/mysql/my.cnf
+        prepend_newline: true
+        block: |
+          [mysqld]
+          skip-networking=0
+          skip-bind-address
 
     - name: Restart MySQL service to apply changes
       service:
