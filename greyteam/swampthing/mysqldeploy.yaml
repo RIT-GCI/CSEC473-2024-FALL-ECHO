@@ -46,6 +46,22 @@
       ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'blackteam'@'%' WITH GRANT OPTION;"
       ignore_errors: false
 
+    - name: Create Scream mysql user
+      ansible.builtin.command: sudo mysql -e "CREATE USER 'scream'@'%' IDENTIFIED BY 'Changeme.B00!';"
+      ignore_errors: true
+
+    - name: Grant permission to Scream user
+      ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'scream'@'%' WITH GRANT OPTION;"
+      ignore_errors: false
+
+    - name: Create Jigsaw mysql user
+      ansible.builtin.command: sudo mysql -e "CREATE USER 'jigsaw'@'%' IDENTIFIED BY 'Changeme.B00!';"
+      ignore_errors: true
+
+    - name: Grant permission to Jigsaw user
+      ansible.builtin.command: sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'jigsaw'@'%' WITH GRANT OPTION;"
+      ignore_errors: false
+
     - name: Install required packages for AD integration
       apt:
         name: "{{ realm_packages }}"
